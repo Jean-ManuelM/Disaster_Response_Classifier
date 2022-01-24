@@ -3,20 +3,15 @@ import numpy as np
 import pandas as pd
 import sqlite3
 from sqlalchemy import create_engine
-
-
 def load_data(messages_filepath, categories_filepath):
     # load messages dataset
     messages = pd.read_csv (messages_filepath)
-
     # load categories dataset
     categories = pd.read_csv (categories_filepath)
     
     # merge datasets
     df = messages.merge(categories, how ='inner', on='id')    
-    pass
-
-
+    return df
 def clean_data(df):
     # create a dataframe of the 36 individual category columns
     categories = df.categories.str.split(pat=';', expand=True)
@@ -43,31 +38,22 @@ def clean_data(df):
     
     # drop the original categories column from `df`
     df.drop('categories', axis='columns', inplace=True)
-
     # concatenate the original dataframe with the new `categories` dataframe
     df = pd.concat([df,categories], axis = 1, join = 'inner' )
     
     # drop duplicates
     df.drop_duplicates(inplace = True, keep='first')
-
-    pass
-
-
+    return df
 def save_data(df, database_filename):
     engine = create_engine('sqlite:///DisasterResponse.db')
     df.to_sql('responses', engine, index=False)
-    pass  
-
-
+    return df
 def main():
     if len(sys.argv) == 4:
-
         messages_filepath, categories_filepath, database_filepath = sys.argv[1:]
-
         print('Loading data...\n    MESSAGES: {}\n    CATEGORIES: {}'
               .format(messages_filepath, categories_filepath))
         df = load_data(messages_filepath, categories_filepath)
-
         print('Cleaning data...')
         df = clean_data(df)
         
@@ -83,7 +69,5 @@ def main():
               'to as the third argument. \n\nExample: python process_data.py '\
               'disaster_messages.csv disaster_categories.csv '\
               'DisasterResponse.db')
-
-
 if __name__ == '__main__':
     main()
