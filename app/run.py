@@ -31,8 +31,11 @@ def tokenize(text):
 
     return clean_tokens
 
+
+
 # load data
 engine = create_engine('sqlite:///../DisasterResponse.db')
+
 df = pd.read_sql_table('DisasterResponse', engine)
 
 # load model
@@ -52,7 +55,6 @@ def index():
     
     #Top 15 categorie
     
-    
     categories_sorted_values = df.iloc[:, 4:].sum().sort_values(ascending=False)[1:16]
     
     
@@ -61,8 +63,7 @@ def index():
     
     
     
-    # create visuals
-    # TODO: Below is an example - modify to create your own visuals
+   # TODO: Below is an example - modify to create your own visuals
     graphs = [
         {
             'data': [
