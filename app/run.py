@@ -3,7 +3,7 @@ import plotly
 import pandas as pd
 
 import nltk
-nltk.download()
+#nltk.download()
 
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
@@ -12,6 +12,8 @@ from nltk.tokenize import word_tokenize
 from flask import Flask
 from flask import render_template, request, jsonify
 from plotly.graph_objs import Bar
+
+
 import joblib
 from sqlalchemy import create_engine
 
@@ -19,7 +21,6 @@ from sqlalchemy import create_engine
 app = Flask(__name__)
 
 def tokenize(text):
-    nltk.download()
     tokens = word_tokenize(text)
     lemmatizer = WordNetLemmatizer()
 
@@ -48,6 +49,18 @@ def index():
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
     
+    
+    #Top 15 categorie
+    
+    
+    categories_sorted_values = df.iloc[:, 4:].sum().sort_values(ascending=False)[1:16]
+    
+    
+    categories_sorted_name = list(categories_sorted_values.index)
+    
+    
+    
+    
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
     graphs = [
@@ -68,8 +81,31 @@ def index():
                     'title': "Genre"
                 }
             }
+        },
+        #new graph
+        { 
+            'data': [
+                Bar(
+                    y=categories_sorted_values,
+                    x=categories_sorted_name                    
+                )
+            ],
+
+            'layout': {
+                'title': 'Top 15 categories',
+                'yaxis': {
+                    'title': "Count"
+                },
+                'xaxis': {
+                    'title': "Categorie"
+                }
+                
+            }
         }
     ]
+    
+    
+    
     
     # encode plotly graphs in JSON
     ids = ["graph-{}".format(i) for i, _ in enumerate(graphs)]
@@ -99,7 +135,7 @@ def go():
 
 def main():
     app.run(host='0.0.0.0', port=3001, debug=True)
-
+#host='127.0.0.1', port=5000
 
 if __name__ == '__main__':
     main()
