@@ -52,7 +52,7 @@ The used Python libraries :
 
 
 ### Clone Repository
-You can clone this github repository : https://github.com/ordepzero/disaster_respnse_pipeline   
+You can clone this github repository :  https://github.com/Jean-ManuelM/Disaster_Response_Classifier.git 
 
 
 ### Instructions
